@@ -11,6 +11,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Stage 2: Final image
 FROM scratch
+LABEL org.opencontainers.image.source=https://github.com/guemidiborhane/resume
 
 # Copy the statically compiled binary from the builder stage
 COPY --from=builder /app/main /app/main
