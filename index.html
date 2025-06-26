@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borhaneddine GUEMIDI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/2dbd60274b.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+        :root {
+            --terminal-bg: #0d1117;
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-green-bright: #39ff14;
+            --terminal-gray: #8b949e;
+            --terminal-white: #f0f6fc;
+            --terminal-border: #30363d;
+        }
+
+        * {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-white);
+        }
+
+        .terminal-border {
+            border: 1px solid var(--terminal-border);
+            border-radius: 8px;
+        }
+
+        .terminal-green {
+            color: var(--terminal-green);
+        }
+
+        .terminal-green-dim {
+            color: var(--terminal-green-dim);
+        }
+
+        .terminal-green-bright {
+            color: var(--terminal-green-bright);
+        }
+
+        .terminal-gray {
+            color: var(--terminal-gray);
+        }
+
+        .terminal-prompt::before {
+            content: "$ ";
+            color: var(--terminal-green);
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .section-header {
+            position: relative;
+            padding-left: 22px;
+        }
+
+        .section-header::before {
+            content: "┌─";
+            position: absolute;
+            left: 0;
+            color: var(--terminal-green);
+        }
+
+        .section-header::after {
+            content: "─┐";
+            color: var(--terminal-green);
+        }
+
+        .subsection {
+            border-left: 2px solid var(--terminal-green-dim);
+            padding-left: 16px;
+            margin-left: 5px;
+        }
+
+        .skill-tag {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid var(--terminal-green-dim);
+            color: var(--terminal-green);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            display: inline-block;
+            margin: 2px;
+        }
+
+        .achievement-item {
+            background: rgba(0, 255, 65, 0.05);
+            border-left: 3px solid var(--terminal-green);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .job-period {
+            background: rgba(139, 148, 158, 0.1);
+            color: var(--terminal-gray);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .company-name {
+            color: var(--terminal-green-bright);
+            font-weight: 600;
+        }
+
+        .clickable-link {
+            color: var(--terminal-green);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .clickable-link:hover {
+            color: var(--terminal-green-bright);
+            text-decoration: underline;
+        }
+
+        .terminal-window {
+            background: var(--terminal-bg);
+            border: 1px solid var(--terminal-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #21262d;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--terminal-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca3f; }
+
+        @media print {
+            /* PDF Export Optimizations */
+            body {
+                background: white !important;
+                color: black !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 11px !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* Remove terminal window styling for PDF */  
+            .terminal-window {
+                border: none !important;
+                background: white !important;
+                border-radius: 0 !important;
+                overflow: visible !important;
+            }
+            
+            .terminal-header {
+                display: none !important;
+            }
+            
+            /* Adjust colors for print */
+            .terminal-green, .terminal-green-dim, .terminal-green-bright {
+                color: #006600 !important;
+            }
+            
+            .terminal-gray {
+                color: #666666 !important;
+            }
+            
+            .terminal-white {
+                color: black !important;
+            }
+            
+            /* Remove borders and backgrounds for print */
+            .terminal-border {
+                border: none !important;
+            }
+            
+            .skill-tag {
+                background: #f0f0f0 !important;
+                border: 1px solid #006600 !important;
+                color: #006600 !important;
+                font-size: 9px !important;
+                padding: 1px 4px !important;
+                margin: 1px !important;
+            }
+            
+            .achievement-item {
+                background: #f9f9f9 !important;
+                border-left: 2px solid #006600 !important;
+                padding: 8px !important;
+                margin: 4px 0 !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .subsection {
+                border-left: 1px solid #006600 !important;
+                padding-left: 12px !important;
+                margin-left: 3px !important;
+            }
+            
+            .job-period {
+                background: #f0f0f0 !important;
+                color: #666666 !important;
+                border: 1px solid #cccccc !important;
+                font-size: 9px !important;
+                padding: 1px 4px !important;
+            }
+            
+            /* Ensure links are clickable and properly styled in PDF */
+            .clickable-link {
+                color: #0066cc !important;
+                text-decoration: underline !important;
+            }
+            
+            /* Optimize spacing for PDF */
+            .max-w-5xl {
+                max-width: none !important;
+                margin: 0 !important;
+            }
+            
+            .p-4, .p-6, .p-8 {
+                padding: 8px !important;
+            }
+            
+            .mb-8 {
+                margin-bottom: 12px !important;
+            }
+            
+            .mb-6 {
+                margin-bottom: 8px !important;
+            }
+            
+            .mb-4 {
+                margin-bottom: 6px !important;
+            }
+            
+            .mb-3 {
+                margin-bottom: 4px !important;
+            }
+            
+            .mb-2 {
+                margin-bottom: 3px !important;
+            }
+            
+            .space-y-6 > * + * {
+                margin-top: 8px !important;
+            }
+            
+            .space-y-3 > * + * {
+                margin-top: 4px !important;
+            }
+            
+            .space-y-2 > * + * {
+                margin-top: 3px !important;
+            }
+            
+            .space-y-1 > * + * {
+                margin-top: 2px !important;
+            }
+            
+            /* Page break optimization */
+            .border-l-2 {
+                page-break-inside: avoid !important;
+            }
+            
+            h1, h2, h3 {
+                page-break-after: avoid !important;
+            }
+            
+            /* Ensure proper text sizing */
+            h1 {
+                font-size: 24px !important;
+            }
+            
+            h2 {
+                font-size: 16px !important;
+            }
+            
+            h3 {
+                font-size: 14px !important;
+            }
+            
+            h4, h5 {
+                font-size: 12px !important;
+            }
+            
+            /* Grid adjustments for PDF */
+            .grid {
+                display: block !important;
+            }
+            
+            .grid > * {
+                display: inline-block !important;
+                width: auto !important;
+                margin-right: 8px !important;
+                vertical-align: top !important;
+            }
+
+            .professional-experience-section {
+              page-break-before: always !important;
+            }
+        }
+
+        @media screen {
+            /* Ensure links are properly styled for web view */
+            a[href^="mailto:"]:before {
+                content: "";
+            }
+            
+            a[href^="tel:"]:before {
+                content: "";
+            }
+            
+            a[href^="http"]:before {
+                content: "";
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <!-- Terminal Window -->
+        <div class="terminal-window mb-6">
+            <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+                <span class="text-sm terminal-gray ml-4">borhaneddine_guemidi_cv.sh</span>
+            </div>
+            
+            <!-- Header -->
+            <div class="p-6 md:p-8">
+                <div class="text-center mb-8">
+                    <div class="terminal-prompt text-xl md:text-2xl terminal-green font-bold mb-2">whoami</div>
+                    <h1 class="text-3xl md:text-5xl font-bold terminal-green-bright mb-2">Borhaneddine GUEMIDI</h1>
+                    <div class="text-lg md:text-xl terminal-green mb-6">
+                        Senior Full-Stack Developer & Technical Lead
+                        <div class="flex flex-row gap-4 justify-center">
+                            <small class="flex items-center justify-center gap-2">
+                                <i class="fas fa-user terminal-green"></i>
+                                <span>28 years old</span>
+                            </small>
+                            <small class="flex items-center justify-center gap-2">
+                                <i class="fas fa-map-marker-alt terminal-green"></i>
+                                <span>Algiers, Algeria</span>
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="mb-6">
+                        <h2 class="section-header text-xl font-bold terminal-green mb-4 text-left">CONTACT_INFO</h2>
+                        <div class="subsection flex flex-wrap gap-6 justify-center md:justify-start">
+                            <div class="flex items-center justify-center gap-2">
+                                <i class="fas fa-envelope terminal-green"></i>
+                                <a href="mailto:guemidiborhane@gmail.com" class="clickable-link" target="_blank">guemidiborhane@gmail.com</a>
+                            </div>
+                            <div class="flex items-center justify-center gap-2">
+                                <i class="fab fa-github terminal-green"></i>
+                                <a href="https://github.com/guemidiborhane" class="clickable-link" target="_blank">@guemidiborhane</a>
+                            </div>
+                            <div class="flex items-center justify-center gap-2">
+                                <i class="fab fa-linkedin terminal-green"></i>
+                                <a href="https://linkedin.com/in/guemidiborhane" class="clickable-link" target="_blank">@guemidiborhane</a>
+                            </div>
+                            <div class="flex items-center justify-center gap-2">
+                                <i class="fas fa-phone terminal-green"></i>
+                                <a href="tel:+213555576795" class="clickable-link" target="_blank">+213 555 57 67 95</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Professional Summary -->
+                <div class="mb-8">
+                    <h2 class="section-header text-xl font-bold terminal-green mb-4">PROFESSIONAL_SUMMARY</h2>
+                    <div class="subsection">
+                        <p class="leading-relaxed">Senior Full-Stack Developer with 10+ years of progressive experience architecting and leading the development of mission-critical applications. Self-taught engineer with a proven track record of building and maintaining national emergency management systems serving 500+ concurrent users operating 24/7 with 99.998% annual uptime. Demonstrated expertise in full-stack development, infrastructure automation, and team leadership across complex, multi-technology environments.</p>
+                    </div>
+                </div>
+
+                <!-- Key Achievements -->
+                <div class="mb-8">
+                    <h2 class="section-header text-xl font-bold terminal-green mb-4">KEY_ACHIEVEMENTS</h2>
+                    <div class="subsection space-y-3">
+                        <div class="achievement-item">
+                            <i class="fas fa-server terminal-green mr-2"></i>
+                            <strong class="terminal-green-bright">Built National Emergency Platform:</strong> Architected incident management system for Algeria's civil protection services, reducing daily processing time by 60%
+                        </div>
+                        <div class="achievement-item">
+                            <i class="fas fa-chart-line terminal-green mr-2"></i>
+                            <strong class="terminal-green-bright">Infrastructure Excellence:</strong> Designed high-availability systems achieving &lt;10 minutes annual downtime (99.998% uptime)
+                        </div>
+                        <div class="achievement-item">
+                            <i class="fas fa-code terminal-green mr-2"></i>
+                            <strong class="terminal-green-bright">Multi-Platform Development:</strong> Delivered 4+ production SaaS platforms serving healthcare, government, and research sectors
+                        </div>
+                        <div class="achievement-item">
+                            <i class="fas fa-users terminal-green mr-2"></i>
+                            <strong class="terminal-green-bright">Technical Leadership:</strong> Led cross-functional teams through full software development lifecycle from requirements to deployment
+                        </div>
+                        <div class="achievement-item">
+                            <i class="fas fa-language terminal-green mr-2"></i>
+                            <strong class="terminal-green-bright">Language Proficiency:</strong> Trilingual professional with TOEIC 970/990 English certification
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Expertise -->
+                <div class="mb-8">
+                    <h2 class="section-header text-xl font-bold terminal-green mb-4">TECHNICAL_EXPERTISE</h2>
+                    <div class="subsection grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-code mr-2"></i>Programming Languages
+                            </h3>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                <span class="skill-tag">PHP</span>
+                                <span class="skill-tag">Ruby</span>
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">TypeScript</span>
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">Go</span>
+                                <span class="skill-tag">C++</span>
+                            </div>
+
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-server mr-2"></i>Backend Frameworks
+                            </h3>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                <span class="skill-tag">Laravel</span>
+                                <span class="skill-tag">Ruby on Rails</span>
+                                <span class="skill-tag">Symfony</span>
+                                <span class="skill-tag">AdonisJS</span>
+                                <span class="skill-tag">GoFiber</span>
+                            </div>
+
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-desktop mr-2"></i>Frontend Technologies
+                            </h3>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="skill-tag">ReactJS</span>
+                                <span class="skill-tag">VueJS</span>
+                                <span class="skill-tag">Preact</span>
+                                <span class="skill-tag">Bulma</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-cloud mr-2"></i>Cloud & Infrastructure
+                            </h3>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                <span class="skill-tag">AWS</span>
+                                <span class="skill-tag">Azure</span>
+                                <span class="skill-tag">Google Cloud</span>
+                                <span class="skill-tag">Kubernetes</span>
+                                <span class="skill-tag">Docker</span>
+                                <span class="skill-tag">Proxmox</span>
+                                <span class="skill-tag">ESXi</span>
+                            </div>
+
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-database mr-2"></i>Databases
+                            </h3>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                <span class="skill-tag">PostgreSQL</span>
+                                <span class="skill-tag">MySQL</span>
+                                <span class="skill-tag">MariaDB</span>
+                                <span class="skill-tag">Redis</span>
+                                <span class="skill-tag">CockroachDB</span>
+                                <span class="skill-tag">Oracle</span>
+                            </div>
+
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-tools mr-2"></i>DevOps & Tools
+                            </h3>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="skill-tag">Ansible</span>
+                                <span class="skill-tag">GitHub</span>
+                                <span class="skill-tag">GitLab</span>
+                                <span class="skill-tag">Bitbucket</span>
+                                <span class="skill-tag">Linux</span>
+                                <span class="skill-tag">RHEL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Experience -->
+                <div class="mb-8 professional-experience-section">
+                    <h2 class="section-header text-xl font-bold terminal-green mb-4">PROFESSIONAL_EXPERIENCE</h2>
+                    <div class="subsection space-y-6">
+                        
+                        <!-- Senior Position -->
+                        <div class="border-l-2 border-terminal-green-dim pl-4">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+                                <h3 class="text-lg font-bold terminal-green-bright">Senior Full-Stack Developer / Systems Administrator</h3>
+                                <span class="job-period">October 2018 - Present</span>
+                            </div>
+                            <div class="company-name mb-3 flex items-center">
+                                <i class="fas fa-building mr-2 terminal-green"></i>
+                                aina Business Services Algeria
+                            </div>
+
+                            <h4 class="font-semibold terminal-green mb-2 flex items-center">
+                                <i class="fas fa-project-diagram mr-2"></i>
+                                Project: National Emergency Management Platform
+                            </h4>
+                            <ul class="list-none space-y-2 mb-4 terminal-gray">
+                                <li><i class="fas fa-angle-right terminal-green mr-2"></i><strong>Challenge:</strong> Algeria's civil protection needed unified incident management across all regions</li>
+                                <li><i class="fas fa-angle-right terminal-green mr-2"></i><strong>Solution:</strong> Architected comprehensive emergency response platform with real-time coordination capabilities</li>
+                                <li><i class="fas fa-angle-right terminal-green mr-2"></i><strong>Results:</strong> Reduced emergency response coordination time by 60%, achieved 99.998% system uptime, deployed across all national emergency services</li>
+                            </ul>
+
+                            <div class="bg-gray-900 p-4 rounded border-l-3 border-terminal-green mb-4">
+                                <h5 class="font-semibold terminal-green-bright mb-2">Key Technical Implementations:</h5>
+                                <ul class="list-none space-y-1 text-sm terminal-gray">
+                                    <li><i class="fas fa-check terminal-green mr-2"></i><strong class="terminal-white">Personnel Management:</strong> Built real-time tracking system for 500+ emergency responders</li>
+                                    <li><i class="fas fa-check terminal-green mr-2"></i><strong class="terminal-white">Equipment Tracking:</strong> Developed nationwide equipment monitoring with GPS integration, reducing resource location time by 75%</li>
+                                    <li><i class="fas fa-check terminal-green mr-2"></i><strong class="terminal-white">Incident Database:</strong> Created national incident registry with full audit trails</li>
+                                    <li><i class="fas fa-check terminal-green mr-2"></i><strong class="terminal-white">Access Control:</strong> Implemented granular authorization system</li>
+                                    <li><i class="fas fa-check terminal-green mr-2"></i><strong class="terminal-white">Reporting Engine:</strong> Built on-demand report generation, reducing bureaucratic delays by 80%</li>
+                                </ul>
+                            </div>
+
+                            <h5 class="font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-cogs mr-2"></i>Infrastructure Leadership:
+                            </h5>
+                            <ul class="list-none space-y-1 text-sm terminal-gray">
+                                <li><i class="fas fa-dot-circle terminal-green mr-2"></i>Architected fault-tolerant infrastructure with automatic failover mechanisms</li>
+                                <li><i class="fas fa-dot-circle terminal-green mr-2"></i>Deployed Zulip, Mattermost, and complete email infrastructure (SMTP, POP3, IMAP)</li>
+                                <li><i class="fas fa-dot-circle terminal-green mr-2"></i>Implemented enterprise-grade 3-2-1 backup strategy protecting 100% of critical client data</li>
+                                <li><i class="fas fa-dot-circle terminal-green mr-2"></i>Managed production and staging Kubernetes clusters supporting 24/7 operations</li>
+                            </ul>
+                        </div>
+
+                        <!-- Junior Position -->
+                        <div class="border-l-2 border-terminal-green-dim pl-4">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+                                <h3 class="text-lg font-bold terminal-green-bright">Junior Full-Stack Developer</h3>
+                                <span class="job-period">February 2015 - October 2018</span>
+                            </div>
+                            <div class="company-name mb-3 flex items-center">
+                                <i class="fas fa-building mr-2 terminal-green"></i>
+                                aina Business Services Algeria
+                            </div>
+
+                            <div class="space-y-3">
+                                <div>
+                                    <h4 class="font-semibold terminal-green mb-1 flex items-center">
+                                        <i class="fas fa-mosque mr-2"></i>Awqaf SaaS Platform
+                                    </h4>
+                                    <ul class="list-none space-y-1 text-sm terminal-gray">
+                                        <li><i class="fas fa-arrow-right terminal-green mr-2"></i>Built property and mosque management platform using CakePHP</li>
+                                        <li><i class="fas fa-arrow-right terminal-green mr-2"></i>Integrated company's internal mapping services for geographical visualization</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-semibold terminal-green mb-1 flex items-center">
+                                        <i class="fas fa-dna mr-2"></i>Nooromics: Genome Analysis Platform
+                                    </h4>
+                                    <ul class="list-none space-y-1 text-sm terminal-gray">
+                                        <li><i class="fas fa-arrow-right terminal-green mr-2"></i>Developed Laravel-based SaaS for genetic data processing and comparison</li>
+                                        <li><i class="fas fa-arrow-right terminal-green mr-2"></i>Integrated FASTA and BLAST industry-standard tools</li>
+                                        <li><i class="fas fa-arrow-right terminal-green mr-2"></i>Features: Queue management with credit system, dynamic results dashboard</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-semibold terminal-green mb-1 flex items-center">
+                                        <i class="fas fa-map mr-2"></i>GeoCollect: Field Data Collection Platform
+                                    </h4>
+                                    <ul class="list-none space-y-1 text-sm terminal-gray">
+                                        <li><i class="fas fa-arrow-right terminal-green mr-2"></i>Technology: Ruby on Rails + VueJS</li>
+                                        <li><i class="fas fa-arrow-right terminal-green mr-2"></i>Security: End-to-end encryption and network redundancy</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Intern Position -->
+                        <div class="border-l-2 border-terminal-green-dim pl-4">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+                                <h3 class="text-lg font-bold terminal-green-bright">Developer Intern</h3>
+                                <span class="job-period">January 2014 - January 2015</span>
+                            </div>
+                            <div class="company-name mb-3 flex items-center">
+                                <i class="fas fa-building mr-2 terminal-green"></i>
+                                aina Business Services Algeria
+                            </div>
+                            <p class="text-sm terminal-gray"><i class="fas fa-info-circle terminal-green mr-2"></i>Contributed to company's core geographical information systems including web mapping, real-time pathfinding, geo-fencing, vehicle tracking, and point of interest search functionality.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div class="mb-8">
+                    <h2 class="section-header text-xl font-bold terminal-green mb-4">EDUCATION_AND_DEVELOPMENT</h2>
+                    <div class="subsection">
+                        <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                            <i class="fas fa-graduation-cap mr-2"></i>Self-Directed Technical Education
+                        </h3>
+                        <span class="job-period mb-3 inline-block">2013 - Present</span>
+                        
+                        <p class="mb-3 terminal-gray">Continuous learning focus on advanced software architecture, cloud computing, infrastructure automation, and emerging technologies through hands-on projects and open-source contributions.</p>
+                        
+                        <div class="bg-gray-900 p-4 rounded border-l-3 border-terminal-green">
+                            <h4 class="font-semibold terminal-green-bright mb-2">Key Learning Areas:</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                                <div class="flex items-center"><i class="fas fa-check terminal-green mr-2"></i>Full-stack web development fundamentals</div>
+                                <div class="flex items-center"><i class="fas fa-check terminal-green mr-2"></i>Database design and optimization</div>
+                                <div class="flex items-center"><i class="fas fa-check terminal-green mr-2"></i>System administration and DevOps practices</div>
+                                <div class="flex items-center"><i class="fas fa-check terminal-green mr-2"></i>Software engineering methodologies</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Languages -->
+                <div class="mb-8">
+                    <h2 class="section-header text-xl font-bold terminal-green mb-4">LANGUAGES</h2>
+                    <div class="subsection grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-gray-900 p-4 rounded border-l-3 border-terminal-green">
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-star terminal-green mr-2"></i>
+                                <strong class="terminal-green-bright">English</strong>
+                            </div>
+                            <div class="text-sm terminal-gray">Professional proficiency</div>
+                            <div class="text-sm terminal-green">(TOEIC: 970/990)</div>
+                        </div>
+                        <div class="bg-gray-900 p-4 rounded border-l-3 border-terminal-green">
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-star terminal-green mr-2"></i>
+                                <strong class="terminal-green-bright">Arabic</strong>
+                            </div>
+                            <div class="text-sm terminal-gray">Native speaker</div>
+                        </div>
+                        <div class="bg-gray-900 p-4 rounded border-l-3 border-terminal-green">
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-star terminal-green mr-2"></i>
+                                <strong class="terminal-green-bright">French</strong>
+                            </div>
+                            <div class="text-sm terminal-gray">Native speaker</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Competencies -->
+                <div class="mb-8">
+                    <h2 class="section-header text-xl font-bold terminal-green mb-4">CORE_COMPETENCIES</h2>
+                    <div class="subsection grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-users-cog mr-2"></i>Technical Leadership
+                            </h3>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                <span class="skill-tag">Team Coordination</span>
+                                <span class="skill-tag">Architecture Decisions</span>
+                                <span class="skill-tag">Code Review</span>
+                                <span class="skill-tag">Mentoring</span>
+                            </div>
+
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-puzzle-piece mr-2"></i>Problem Solving
+                            </h3>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="skill-tag">System Debugging</span>
+                                <span class="skill-tag">Performance Optimization</span>
+                                <span class="skill-tag">Scalability Planning</span>
+                                <span class="skill-tag">Crisis Management</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-comments mr-2"></i>Communication
+                            </h3>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                <span class="skill-tag">Stakeholder Management</span>
+                                <span class="skill-tag">Technical Documentation</span>
+                                <span class="skill-tag">Cross-cultural Collaboration</span>
+                                <span class="skill-tag">Multilingual Support</span>
+                            </div>
+
+                            <h3 class="text-lg font-semibold terminal-green-bright mb-2 flex items-center">
+                                <i class="fas fa-cogs mr-2"></i>Methodologies
+                            </h3>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="skill-tag">Agile Development</span>
+                                <span class="skill-tag">DevOps Culture</span>
+                                <span class="skill-tag">CI/CD</span>
+                                <span class="skill-tag">Test-Driven Development</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
