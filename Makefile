@@ -4,4 +4,4 @@ run: main.go
 
 .PHONY=build
 build:
-	docker build -t guemidiborhane/resume:latest .
+	docker build -t ghcr.io/guemidiborhane/resume:latest .
