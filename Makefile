@@ -1,6 +1,8 @@
+PORT?=3000
+
 .PHONY=run
-run: main.go
-	go run main.go
+run:
+	python -m http.server $(PORT)
 
 .PHONY=build
 build:
